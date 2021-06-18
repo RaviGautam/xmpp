@@ -23,6 +23,29 @@
                           dec = {dec_int, [0, infinity]}}],
            cdata = #cdata{default = <<"">>, label = '$status'}}).
 
+-xml(last_batch_jid,
+     #elem{name = <<"jid">>,
+           xmlns = [<<"jabber:client">>, <<"jabber:server">>,
+                    <<"jabber:component:accept">>],
+           module = 'vnc_batch_jid',
+           result = {text, '$lang', '$data'},
+           cdata = #cdata{label = '$data'},
+           attrs = [#attr{name = <<"xml:lang">>,
+                          dec = {xmpp_lang, check, []},
+                          label = '$lang'}]}).
+
+-xml(last_batch,
+     #elem{name = <<"query">>,
+           xmlns = <<"jabber:iq:batch">>,
+           module = 'vnc_batch',
+           result = {last, '$seconds', '$status','$jid'},
+           attrs = [#attr{name = <<"seconds">>,
+                          enc = {enc_int, []},
+                          dec = {dec_int, [0, infinity]}}],
+           refs = [#ref{name = last_batch_jid, label = '$jid'}],
+           cdata = #cdata{default = <<"">>, label = '$status'}}).
+
+
 -xml(version_name,
      #elem{name = <<"name">>,
            xmlns = <<"jabber:iq:version">>,

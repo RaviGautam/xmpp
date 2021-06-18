@@ -23,27 +23,36 @@
                           dec = {dec_int, [0, infinity]}}],
            cdata = #cdata{default = <<"">>, label = '$status'}}).
 
--xml(last_batch_jid,
+-xml(vnc_batch_jid,
      #elem{name = <<"jid">>,
            xmlns = [<<"jabber:client">>, <<"jabber:server">>,
                     <<"jabber:component:accept">>],
            module = 'vnc_batch_jid',
-           result = {text, '$lang', '$data'},
-           cdata = #cdata{label = '$data'},
-           attrs = [#attr{name = <<"xml:lang">>,
-                          dec = {xmpp_lang, check, []},
-                          label = '$lang'}]}).
+           result = '$cdata',
+            cdata = #cdata{label = '$cdata',
+                           required = true,
+                           dec = {jid, decode, []},
+                           enc = {jid, encode, []}}}).
+
+-xml(vnc_batch_item,
+    #elem{name = <<"result">>,
+        xmlns = [<<"jabber:client">>, <<"jabber:server">>,
+                    <<"jabber:component:accept">>],
+        module = 'vnc_batch_item',
+        result = {result, '$seconds','$jid'},
+        attrs = [#attr{name = <<"seconds">>,
+                                enc = {enc_int, []},
+                                dec = {dec_int, [0, infinity]}},
+                #attr{name = <<"jid">>,
+                                dec = {jid, decode, []},
+                                enc = {jid, encode, []}}]}).
 
 -xml(last_batch,
-     #elem{name = <<"query">>,
-           xmlns = <<"jabber:iq:batch">>,
-           module = 'vnc_batch',
-           result = {last, '$seconds', '$status','$jid'},
-           attrs = [#attr{name = <<"seconds">>,
-                          enc = {enc_int, []},
-                          dec = {dec_int, [0, infinity]}}],
-           refs = [#ref{name = last_batch_jid, label = '$jid'}],
-           cdata = #cdata{default = <<"">>, label = '$status'}}).
+    #elem{name = <<"query">>,
+        xmlns = <<"jabber:iq:batch">>,
+        module = 'vnc_batch',
+        result = {last_batch,'$vnc_batch_item','$vnc_batch_jid'},
+        refs = [#ref{name = vnc_batch_item, label = '$vnc_batch_item'},#ref{name = vnc_batch_jid, label = '$vnc_batch_jid'}]}).
 
 
 -xml(version_name,

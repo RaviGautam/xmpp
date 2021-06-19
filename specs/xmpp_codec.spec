@@ -39,7 +39,7 @@
         xmlns = [<<"jabber:client">>, <<"jabber:server">>,
                     <<"jabber:component:accept">>],
         module = 'vnc_batch_item',
-        result = {result, '$seconds','$jid'},
+        result = {result_vnc, '$seconds','$jid'},
         attrs = [#attr{name = <<"seconds">>,
                                 enc = {enc_int, []},
                                 dec = {dec_int, [0, infinity]}},
